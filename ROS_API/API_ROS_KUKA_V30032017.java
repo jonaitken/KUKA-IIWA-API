@@ -33,14 +33,14 @@ import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
  * 
  * Author: Saeid Mokaram
  * Email: s.mokaram@sheffield.ac.uk , saeid.mokaram@gmail.com
- * Date: 6/3/2017
+ * Date: 30/3/2017
 *******************************************************/
 
 /*******************************************************
-* You need to make a tool1 tool2 tool3 tool4 in 'Template data->Template Group of Tools' and name it 'tool'.
-* Insert new empty frame under 'tool1-4' and name it 'TCP'.
-* In properties of 'tool1-4', set the transformation values.
-* In properties of 'tool1-4', select the 'TCP' as 'Default Motion Frame'.
+* You need to make a tool1 in 'Template data->Template Group of Tools' and name it 'tool'.
+* Insert new empty frame under 'tool1' and name it 'TCP'.
+* In properties of the 'tool1', set the transformation values.
+* In properties of the 'tool1', select the 'TCP' as 'Default Motion Frame'.
 * Synchronize the robot with Sunrise Workbench. 
 * On the robot control pad, perform Automatic load data determination for the tool.
 *******************************************************/
@@ -101,7 +101,7 @@ public class API_ROS_KUKA_V30032017 extends RoboticsAPIApplication {
 		
 		while (true){
 			try{
-			    skt = new Socket("172.31.1.50", 1234);
+			    skt = new Socket("172.31.1.50", 1234); // Modify the IP and port depending on the system which is running the ROS-KUKA node server if it is required.
 		    	System.out.println("KUKA iiwa is connected to the server.");
 		    	break;
 			}
@@ -162,7 +162,7 @@ public class API_ROS_KUKA_V30032017 extends RoboticsAPIApplication {
 
     public ICondition defineSensitivity() {
 		//double sensCLS = getApplicationData().getProcessData("sensCLS").getValue(); // Uncomment if you have "sensCLS" defined.
-		double sensCLS = 30;
+		double sensCLS = 30; // Modify the value if required.
 		
 		//Offsetkompensation
 		double actTJ1 = lbr.getExternalTorque().getSingleTorqueValue(JointEnum.J1);
@@ -829,5 +829,3 @@ public class API_ROS_KUKA_V30032017 extends RoboticsAPIApplication {
 	}
 }
 
-
-// command for relative movements
