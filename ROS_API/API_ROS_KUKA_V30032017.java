@@ -682,6 +682,20 @@ public class API_ROS_KUKA_V30032017 extends RoboticsAPIApplication {
 			getLogger().info("Unacceptable sleep command!");
 	}
 
+	public void getIsFinished(PrintWriter outputStream)
+	{
+		LastReceivedTime = System.currentTimeMillis();
+		try{
+			if(this._currentMotion.isFinished())
+	        	reply(outputStream, ">"+"isFinished " + "true");
+			else
+	        	reply(outputStream, ">"+"isFinished " + "false");
+		}
+		catch(Exception e){
+        	reply(outputStream, ">"+"isFinished " + "true");
+		};
+	}
+
 	//===========================================================
 	
 	public Thread Send_iiwa_data = new Thread(){
@@ -700,6 +714,7 @@ public class API_ROS_KUKA_V30032017 extends RoboticsAPIApplication {
 	    		getIsReadyToMove(outputStream);
 	    		getIsMastered(outputStream);
 	    		getOperationMode(outputStream);
+	    		getIsFinished(outputStream);
 	    		
 	    		ThreadUtil.milliSleep(100);
 	    	}
