@@ -1,5 +1,4 @@
-package ROS_API;
-
+package application;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -11,11 +10,14 @@ import java.net.Socket;
 import com.kuka.common.ThreadUtil;
 import com.kuka.roboticsAPI.applicationModel.RoboticsAPIApplication;
 import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
+
+import com.kuka.roboticsAPI.conditionModel.ICallbackAction;
 import com.kuka.roboticsAPI.conditionModel.ICondition;
 import com.kuka.roboticsAPI.conditionModel.JointTorqueCondition;
 import com.kuka.roboticsAPI.deviceModel.JointEnum;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
+import com.kuka.roboticsAPI.executionModel.IFiredTriggerInfo;
 import com.kuka.roboticsAPI.geometricModel.CartDOF;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
@@ -187,26 +189,36 @@ public class API_ROS_KUKA_V30032017 extends RoboticsAPIApplication {
 		return forceCon;
 	}
 	
+    private IMotionContainer _currentMotion;
     public void MoveSafe(MotionBatch MB) {
 		ICondition forceCon = defineSensitivity();
 		
+		ICallbackAction ica = new ICallbackAction() {
+			@Override
+			public void onTriggerFired(IFiredTriggerInfo triggerInformation)
+			{
+				triggerInformation.getMotionContainer().cancel();
+				behaviourAfterCollision();
+			}
+		};
+
 		if(isCartImpCtrlMode)
 		{
 			MB.setJointAccelerationRel(JointAcceleration)
 			.setJointVelocityRel(JointVelocity)
 			.setMode(cartImpCtrlMode)
-			.breakWhen(forceCon);	
+			.triggerWhen(forceCon, ica);
 		}
 		else
 		{
 			MB.setJointAccelerationRel(JointAcceleration)
 			.setJointVelocityRel(JointVelocity)
-			.breakWhen(forceCon);
+			.triggerWhen(forceCon, ica);
 		}
 		
 		try {
-			if ( tool.move(MB).hasFired(forceCon) )
-				behaviourAfterCollision();
+                         if ( lbr.isReadyToMove() )
+                                this._currentMotion=tool.moveAsync(MB);
 		} catch (Exception e) {
 			System.out.println("ERROR! Cannot execute the motion.");
 			int sel;
@@ -400,14 +412,26 @@ public class API_ROS_KUKA_V30032017 extends RoboticsAPIApplication {
     }
 	
 	public void setForceStop(){
+		try{
+			if(!(this._currentMotion.isFinished() ||
+					this._currentMotion.hasError()))
+				this._currentMotion.cancel();
+		}
+		catch(Exception e){
+			// nop
+		};
+			
 		CartesianImpedanceControlMode ForceStop = new CartesianImpedanceControlMode();
 		ForceStop.parametrize(CartDOF.ALL).setDamping(.7);
 		ForceStop.parametrize(CartDOF.ROT).setStiffness(300);
 		ForceStop.parametrize(CartDOF.TRANSL).setStiffness(5000);
 		
-		handleCompliance.cancel();
 		handleCompliance = lbr.moveAsync(positionHold(ForceStop, 0, TimeUnit.SECONDS));
+		handleCompliance.cancel();
 		isCompliance = false;
+		
+		behaviourAfterCollision();
+		
 		getLogger().info("ForceStop!");
 	}
 	
