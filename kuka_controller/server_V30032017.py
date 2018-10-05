@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # KUKA API for ROS
-version = 'V15032017+'
+version = 'V15032017++'
 
 # Marhc 2017 Saeid Mokaram  saeid.mokaram@gmail.com
 # Sheffield Robotics    http://www.sheffieldrobotics.ac.uk/
@@ -53,6 +53,7 @@ class iiwa_socket:
         self.JointVelocity = (None,None)
         self.JointJerk = (None,None)
         self.isFinished = (False, None)
+        self.hasError = (False, None)
         self.isready = False
         
 
@@ -161,6 +162,9 @@ class iiwa_socket:
                     if len(pack) and cmd_splt[0]=='isFinished':  # If isFinished
                         if cmd_splt[1] == "false": self.isFinished = (False, last_read_time)
                         elif cmd_splt[1] == "true": self.isFinished = (True, last_read_time)
+                    if len(pack) and cmd_splt[0]=='hasError':  # If hasError
+                        if cmd_splt[1] == "false": self.hasError = (False, last_read_time)
+                        elif cmd_splt[1] == "true": self.hasError = (True, last_read_time)
                     
 
                     if ( all(item != None for item in self.JointPosition[0]) and
@@ -230,6 +234,7 @@ class kuka_iiwa_ros_node:
         pub_JointVelocity = rospy.Publisher('JointVelocity', String, queue_size=10)
         pub_JointJerk = rospy.Publisher('JointJerk', String, queue_size=10)
         pub_isFinished = rospy.Publisher('isFinished', String, queue_size=10)
+        pub_hasError = rospy.Publisher('hasError', String, queue_size=10)
 
         #   Make kuka_iiwa node
         rospy.init_node('kuka_iiwa', anonymous=False)
@@ -250,7 +255,8 @@ class kuka_iiwa_ros_node:
                                  [pub_JointAcceleration, self.iiwa_soc.JointAcceleration],
                                  [pub_JointVelocity, self.iiwa_soc.JointVelocity],
                                  [pub_JointJerk, self.iiwa_soc.JointJerk],
-                                 [pub_isFinished, self.iiwa_soc.isFinished] ]:
+                                 [pub_isFinished, self.iiwa_soc.isFinished],
+                                 [pub_hasError, self.iiwa_soc.hasError]]:
 
                 data_str = str(data[0]) +' '+ str(rospy.get_time())
                 ##########rospy.loginfo(data_str)

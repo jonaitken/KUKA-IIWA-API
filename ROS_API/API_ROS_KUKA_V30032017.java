@@ -1,6 +1,7 @@
 package application;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import static com.kuka.roboticsAPI.motionModel.BasicMotions.*;
 import com.kuka.roboticsAPI.conditionModel.ICallbackAction;
 import com.kuka.roboticsAPI.conditionModel.ICondition;
 import com.kuka.roboticsAPI.conditionModel.JointTorqueCondition;
+import com.kuka.roboticsAPI.deviceModel.Device;
 import com.kuka.roboticsAPI.deviceModel.JointEnum;
 import com.kuka.roboticsAPI.deviceModel.JointPosition;
 import com.kuka.roboticsAPI.deviceModel.LBR;
@@ -21,11 +23,14 @@ import com.kuka.roboticsAPI.executionModel.IFiredTriggerInfo;
 import com.kuka.roboticsAPI.geometricModel.CartDOF;
 import com.kuka.roboticsAPI.geometricModel.Frame;
 import com.kuka.roboticsAPI.geometricModel.Tool;
+import com.kuka.roboticsAPI.motionModel.ErrorHandlingAction;
 import com.kuka.roboticsAPI.motionModel.IMotionContainer;
+import com.kuka.roboticsAPI.motionModel.IErrorHandler;
 import com.kuka.roboticsAPI.motionModel.MotionBatch;
 import com.kuka.roboticsAPI.motionModel.OrientationReferenceSystem;
 import com.kuka.roboticsAPI.motionModel.controlModeModel.CartesianImpedanceControlMode;
 import com.kuka.roboticsAPI.uiModel.ApplicationDialogType;
+
 
 /*******************************************************
  * Implementation of API for KUKA LBR 7/14
@@ -76,6 +81,8 @@ public class API_ROS_KUKA_V30032017 extends RoboticsAPIApplication {
 	
 	public CartesianImpedanceControlMode cartImpCtrlMode = new CartesianImpedanceControlMode();
 	public boolean isCartImpCtrlMode = false;
+
+	private IErrorHandler errorHandler;
 	//===========================================================
 	
 	public void initialize() {
@@ -95,6 +102,24 @@ public class API_ROS_KUKA_V30032017 extends RoboticsAPIApplication {
 		cartImpCtrlMode.parametrize(CartDOF.B).setStiffness(300.0);
 		cartImpCtrlMode.parametrize(CartDOF.C).setStiffness(300.0);
 		cartImpCtrlMode.parametrize(CartDOF.ALL).setDamping(1.0);
+
+		errorHandler = new IErrorHandler() {
+			@Override
+			public ErrorHandlingAction handleError(Device device,
+					IMotionContainer failedContainer,
+					List<IMotionContainer> canceledContainers) {
+                            getLogger().warn("Excecution of the following motion failed: "
+                                             + failedContainer.getCommand().toString());
+                            getLogger().info("The following motions will not be executed:");
+                            for (int i = 0; i < canceledContainers.size(); i++) {
+                                getLogger().info(canceledContainers.get(i)
+                                                 .getCommand().toString());
+                            }
+                            return ErrorHandlingAction.Ignore;
+			}
+                    };
+		getApplicationControl()
+                    .registerMoveAsyncErrorHandler(errorHandler);
 	}
 
 	public void socketConnection()  // Connecting to server at 172.31.1.50 Port:1234
@@ -156,9 +181,9 @@ public class API_ROS_KUKA_V30032017 extends RoboticsAPIApplication {
 		CollisionSoft.parametrize(CartDOF.TRANSL).setStiffness(600);
 				
 		handle = tool.moveAsync(positionHold(CollisionSoft, -1, TimeUnit.SECONDS));
-		getApplicationUI().displayModalDialog(ApplicationDialogType.WARNING,
+		/*getApplicationUI().displayModalDialog(ApplicationDialogType.WARNING,
 			"Collision Has Occurred!\n\n LBR is compliant...",
-			"Continue");
+			"Continue");*/
 		handle.cancel();
 	}
 
@@ -216,20 +241,9 @@ public class API_ROS_KUKA_V30032017 extends RoboticsAPIApplication {
 			.triggerWhen(forceCon, ica);
 		}
 		
-		try {
-                         if ( lbr.isReadyToMove() )
-                                this._currentMotion=tool.moveAsync(MB);
-		} catch (Exception e) {
-			System.out.println("ERROR! Cannot execute the motion.");
-			int sel;
-			sel = getApplicationUI().displayModalDialog(ApplicationDialogType.ERROR,
-					"Cannot execute the motion!",
-					"Terminate", // 0
-					"Continue");
-			if(sel == 0)
-				RUN = false;
-		}
 		
+		if(lbr.isReadyToMove())
+			this._currentMotion=tool.moveAsync(MB);
 	}
 
 	//===========================================================
@@ -370,8 +384,6 @@ public class API_ROS_KUKA_V30032017 extends RoboticsAPIApplication {
             double a = Math.toRadians( Float.parseFloat(strParams[4]) );
             double b = Math.toRadians( Float.parseFloat(strParams[5]) );
             double c = Math.toRadians( Float.parseFloat(strParams[6]) );
-            
-            System.out.println("Received: " + strParams[0] + "," + params[0] + "," + params[1] + "," + params[2] + "," + params[3] + "," + params[4] + "," + params[5]);        
             
             MotionBatch motion = new MotionBatch(linRel(x, y, z, a, b, c).setJointJerkRel(JointJerk).setCartVelocity(CartVelocity));
             MoveSafe(motion);
@@ -531,7 +543,6 @@ public class API_ROS_KUKA_V30032017 extends RoboticsAPIApplication {
 	
 	public void getJointPosition(PrintWriter outputStream)
 	{
-		ArrayList<JointPosition> positions = new ArrayList<JointPosition>();		
 		LastReceivedTime = System.currentTimeMillis();
 		double a0 = Math.toDegrees( lbr.getCurrentJointPosition().get(0) );
 		double a1 = Math.toDegrees( lbr.getCurrentJointPosition().get(1) );
@@ -695,7 +706,19 @@ public class API_ROS_KUKA_V30032017 extends RoboticsAPIApplication {
         	reply(outputStream, ">"+"isFinished " + "true");
 		};
 	}
-
+	public void getHasError(PrintWriter outputStream)
+	{
+		LastReceivedTime = System.currentTimeMillis();
+		try{
+                    if(this._currentMotion.hasError())
+                        reply(outputStream, ">"+"hasError " + "true");
+                    else
+                        reply(outputStream, ">"+"hasError " + "false");
+		}
+		catch(Exception e){
+                    reply(outputStream, ">"+"hasError " + "true");
+		};
+	}
 	//===========================================================
 	
 	public Thread Send_iiwa_data = new Thread(){
@@ -715,12 +738,13 @@ public class API_ROS_KUKA_V30032017 extends RoboticsAPIApplication {
 	    		getIsMastered(outputStream);
 	    		getOperationMode(outputStream);
 	    		getIsFinished(outputStream);
-	    		
+                        getHasError(outputStream);
+
 	    		ThreadUtil.milliSleep(100);
 	    	}
 	    }
 	};
-	
+
 	public Thread MonitorWorkspace = new Thread(){
 		JointPosition pos_last;
 		JointPosition pos_tmp;
