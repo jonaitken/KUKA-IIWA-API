@@ -1,0 +1,18 @@
+{
+  "name": "kuka-iiwa-gui",
+  "version": "0.1.0",
+  "description": "GUI contoroller for KUKA-IIWA-API",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "cp node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2 ./ & cp node_modules/roboto-fontface/fonts/roboto/Roboto-Regular.woff2 ./ & cp node_modules/roboto-fontface/fonts/roboto/Roboto-Bold.woff2 ./"
+  },
+  "author": "NISHI, Takao <zophos@ni.aist.go.jp>",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.3.1",
+    "electron": "^2.0.8",
+    "roboto-fontface": "^0.10.0",
+    "rosnodejs": "^3.0.0"
+  }
+}

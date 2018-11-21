@@ -1,0 +1,317 @@
+@font-face {
+    font-family:'Roboto';
+    src:url('./Roboto-Regular.woff2') format('woff2');
+    font-weight:400;
+    font-style:normal;
+}
+@font-face {
+    font-family:'Roboto';
+    src:url('./Roboto-Bold.woff2') format('woff2');
+    font-weight:700;
+    font-style:bold;
+}
+@font-face{
+    font-family:"Font Awesome 5 Free";
+    src:url('./fa-solid-900.woff2') format("woff2");
+    font-weight:700;
+    font-style:normal;
+}
+.fa{
+    font-family:"Font Awesome 5 Free";
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    border:none;
+    width:100%;
+    height:100%;
+    background-color:#3a3a4a;
+    color:#d0d0d0;
+    overflow:hidden;
+    font-family:Roboto,sans-self;
+}
+body{
+    width:960px;
+    cursor:default;
+}
+#region-monitor{
+    padding:1ex 1em;
+    user-select:none;
+}
+#region-monitor .disable{
+    color:#808080;
+}
+
+#region-monitor table{
+    margin:.5ex 0 3ex 0;
+    border-spacing:0.35em 0;
+}
+
+#region-monitor thead th{
+    background-color:#5a5a6a;
+    border-radius:2px;
+    border-bottom:solid 3px #3a3a4a;
+    text-align:left;
+    padding-left:1em;
+    font-size:1.1em;
+    font-weight:bold;
+}
+#region-monitor td{
+    width:8.3em;
+    background-color:#4a4a6a;
+    border-radius: 0 0 5px 5px;
+    text-align:center;
+}
+#region-monitor thead td{
+    font-weight:bold;
+    border-radius: 5px 5px 0 0;
+    border-bottom:solid 3px #3a3a4a;
+}
+#region-monitor table .value{
+    display:inline-block;
+    width:5.2em;
+    text-align:center;
+    user-select:all;
+}
+
+#tbl-joint,#tbl-force{
+    width:58em;
+}
+#tbl-world{
+    width:50em;
+}
+
+#region-monitor td span.fa{
+    cursor:pointer;
+    text-shadow:1px 1px 1px rgba(0,0,0,0.6);
+}
+#region-monitor td span.fa:hover{
+    color:orange;
+}
+#region-monitor td span.fa:active{
+    color:red;
+    text-shadow:none;
+}
+
+#region-monitor #tbl-force{
+    margin-bottom:1ex;
+}
+
+#tbl-force th:hover{
+    cursor:pointer;
+}
+#tbl-force th:hover{
+    background-color:orange;
+}
+#tbl-force th:active{
+    background-color:red;
+}
+
+#region-command{
+    padding:1ex 1.35em;
+}
+#region-command-tab{
+    width:100%;
+    margin:0;
+    padding:0;
+    user-select:none;
+}
+#region-command-tab li{
+    display: inline-block;
+    width:5em;
+    margin:0;
+    padding:.5ex 1em;
+    font-size:1.1em;
+    font-weight:bold;
+    text-align:center;
+    border-style:solid solid none solid;
+    border-width:2px 2px 0 2px;
+    border-color:#a0a0a0;
+    border-radius: 7px 7px 0px 0px;
+    background-color:#3a3a4a;
+    outline:0;
+    cursor:pointer;
+}
+#region-command-tab li:hover{
+    background-color:orange;
+}
+#region-command-tab li.enable{
+    border-color:#dadaea;
+    background-color:#dadaea;
+    color:#3a3a4a;
+}
+#region-command-body{
+    position:relative;
+    margin:0;
+    padding:1ex 1.5em;
+    height:130px;
+    background-color:#dadaea;
+    color:#3a3a4a;
+    border-radius: 0px 7px 7px 7px;
+}
+
+div.region-command-body-item{
+    width:870px;
+}
+#region-command-body table{
+    margin:2.5ex auto 3ex auto;
+    border-spacing:0.35em 0;
+}
+#region-command-body td{
+    width:8em;
+    border-radius: 0 0 5px 5px;
+    text-align:center;
+}
+#region-command-body thead td{
+    font-weight:bold;
+    border-radius: 5px 5px 0 0;
+    border-bottom:solid 3px #3a3a4a;
+    background-color:#babaca;
+    user-select:none;
+}
+#region-command-body table .value{
+    display:inline-block;
+    width:100%;
+    text-align:center;
+    cursor:text;
+}
+#region-command-body-misc input{
+    width:64em;
+    height:4ex;
+    padding:0.1ex 0.5em; 
+    margin:2.5ex auto 3ex auto;
+    cursor:text;
+}
+
+#region-command-body div.region-command-body-item{
+    height:45px;
+    display:none;
+}
+#region-command-body div.enable{
+    display:block;
+}
+
+#region-command-button{
+    position:absolute;
+    bottom:0;
+    margin:2em 0 0.5em;
+    padding:0;
+    width:870px;
+    text-align:right;
+}
+#region-command-button p{
+    display:inline-block;
+    width:32px;
+    margin:auto 5px;
+    text-align:center;
+    font-size:20px;
+    border:solid 2px #3a3a4a;
+    border-radius:32px;
+    box-shadow:1px 1px 1px rgba(0,0,0,0.6);
+    user-select:none;
+    cursor:pointer;
+}
+#region-command-button #region-command-button-exec{
+    width:120px;
+    border-radius:12px;
+}
+#region-command-button p:hover{
+    background-color:orange;
+}
+#region-command-button p:active{
+    border:solid 2px red;
+    box-shadow:none;
+    color:red;
+}
+#region-command-button-cval,
+#region-command-button-setzero,
+#region-command-button-hist-older,
+#region-command-button-hist-newer{
+    float:left;
+}
+#region-command-button p.disable{
+    color:#babaca;
+    border:solid 2px #babaca;
+    background-color:#dadaea;
+    box-shadow:none;
+    cursor:default;
+}
+#region-command-button-clear{
+    clear:both;
+    height:0;
+    width:0;
+    margin:0;
+    padding:0;
+    border:none;
+    visibility:hidden;
+}
+
+#do-not-panic{
+    width:860px;
+    margin:20px auto;
+    text-align:center;
+    font-size:75px;
+    font-weight:bold;
+    border-radius:50px;
+    background-color:#c01010;
+    color:#f0f0f0;
+    box-shadow:2px 2px 2px rgba(0,0,0,0.8);
+    /*filter:drop-shadow(-1px -1px 1px rgba(255,255,255,0.3));*/
+    user-select:none;
+    cursor:pointer;
+}
+#do-not-panic.error{
+    display:none;
+}
+#do-not-panic:hover{
+    background-color:#f0f0f0;
+    color:#c01010;
+}
+#do-not-panic:active{
+    background-color:#f0f0f0;
+    box-shadow:none;
+    color:orange;
+}
+
+#motion-error{
+    width:860px;
+    margin:20px auto;
+    text-align:center;
+    font-size:75px;
+    font-weight:bold;
+    display:none;
+}
+#motion-error.error{
+    display:block;
+}
+@keyframes blink{
+  75% { opacity: 0.0; }
+}
+#motion-error .message{
+    color:#f07010;
+    animation:blink 1.5s step-end infinite;
+}
+#motion-error-recover{
+    display:inline-block;
+    padding:5px;
+    margin-left:32px;
+    font-size:52px;
+    text-align:center;
+    border:solid 2px #3a3a4a;
+    border-radius:10px;
+    user-select:none;
+    cursor:pointer;
+    color:#3a3a4a;
+    background-color:#d0d0d0;
+    text-shadow:-1px -1px 1px rgba(0,0,0,0.6);
+    box-shadow:1px 1px 1px rgba(0,0,0,0.6);
+}
+#motion-error-recover:hover{
+    background-color:orange;
+}
+#motion-error-recover:active{
+    background-color:red;
+    text-shadow:none;
+    box-shadow:none;
+}

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='UTF-8'>
+<meta http-equiv='Content-Security-Policy' content="script-src 'self'">
+<link rel='stylesheet' href='default.css' />
+<script src="viewcontroller.js"></script>
+<title>kuka-iiwa-gui</title>
+</head>
+<body>
+<div id='region-monitor'>
+<table id='tbl-joint'>
+<thead><tr class='caption'>
+    <th colspan="7">Joint angle</th>
+  </tr>
+  <tr>
+    <td>A1</td>
+    <td>A2</td>
+    <td>A3</td>
+    <td>A4</td>
+    <td>A5</td>
+    <td>A6</td>
+    <td>A7</td>
+</tr></thead>
+<tbody><tr>
+    <td><span class='fa' id='joint-a1-dec' tabindex='-1'>&#xf13a;</span>
+      <span class='value' id='joint-a1-val'>-000.000</span>
+      <span class='fa' id='joint-a1-inc' tabindex='-1'>&#xf139;</span></td>
+    <td><span class='fa' id='joint-a2-dec' tabindex='-1'>&#xf13a;</span>
+      <span class='value' id='joint-a2-val'>-000.000</span>
+      <span class='fa' id='joint-a2-inc' tabindex='-1'>&#xf139;</span></td>
+    <td><span class='fa' id='joint-a3-dec' tabindex='-1'>&#xf13a;</span>
+      <span class='value' id='joint-a3-val'>-000.000</span>
+      <span class='fa' id='joint-a3-inc' tabindex='-1'>&#xf139;</span></td>
+    <td><span class='fa' id='joint-a4-dec' tabindex='-1'>&#xf13a;</span>
+      <span class='value' id='joint-a4-val'>-000.000</span>
+      <span class='fa' id='joint-a4-inc' tabindex='-1'>&#xf139;</span></td>
+    <td><span class='fa' id='joint-a5-dec' tabindex='-1'>&#xf13a;</span>
+      <span class='value' id='joint-a5-val'>-000.000</span>
+      <span class='fa' id='joint-a5-inc' tabindex='-1'>&#xf139;</span></td>
+    <td><span class='fa' id='joint-a6-dec' tabindex='-1'>&#xf13a;</span>
+      <span class='value' id='joint-a6-val'>-000.000</span>
+      <span class='fa' id='joint-a6-inc' tabindex='-1'>&#xf139;</span></td>
+    <td><span class='fa' id='joint-a7-dec' tabindex='-1'>&#xf13a;</span>
+      <span class='value' id='joint-a7-val'>-000.000</span>
+      <span class='fa' id='joint-a7-inc' tabindex='-1'>&#xf139;</span></td>
+</tr></tbody>
+</table>
+
+<table id='tbl-world'>
+<thead><tr class='caption'>
+    <th colspan="6">Tool posture (<span id='tool-name'>tool1</span>)</th>
+  </tr>
+  <tr>
+    <td>X</td>
+    <td>Y</td>
+    <td>Z</td>
+    <td>A</td>
+    <td>B</td>
+    <td>C</td>
+</tr></thead>
+<tbody><tr>
+    <td><span class='fa' id='world-x-dec' tabindex='-1'>&#xf13a;</span>
+      <span class='value' id='world-x-val'>-000.000</span>
+      <span class='fa' id='world-x-inc' tabindex='-1'>&#xf139;</span></td>
+    <td><span class='fa' id='world-y-dec' tabindex='-1'>&#xf13a;</span>
+      <span class='value' id='world-y-val'>-000.000</span>
+      <span class='fa' id='world-y-inc' tabindex='-1'>&#xf139;</span></td>
+    <td><span class='fa' id='world-z-dec' tabindex='-1'>&#xf13a;</span>
+      <span class='value' id='world-z-val'>-000.000</span>
+      <span class='fa' id='world-z-inc' tabindex='-1'>&#xf139;</span></td>
+    <td><span class='fa' id='world-a-dec' tabindex='-1'>&#xf13a;</span>
+      <span class='value' id='world-a-val'>-000.000</span>
+      <span class='fa' id='world-a-inc' tabindex='-1'>&#xf139;</span></td>
+    <td><span class='fa' id='world-b-dec' tabindex='-1'>&#xf13a;</span>
+      <span class='value' id='world-b-val'>-000.000</span>
+      <span class='fa' id='world-b-inc' tabindex='-1'>&#xf139;</span></td>
+    <td><span class='fa' id='world-c-dec' tabindex='-1'>&#xf13a;</span>
+      <span class='value' id='world-c-val'>-000.000</span>
+      <span class='fa' id='world-c-inc' tabindex='-1'>&#xf139;</span></td>
+</tr></tbody>
+</table>
+
+<table id='tbl-force'>
+<thead><tr class='caption'>
+    <th colspan='3' class='ext' id='ext-caption'>External force</th>
+    <th colspan='3' class='torque' id='torque-caption'>Torque</th>
+</tr>
+<tr>
+  <td class='ext'>X</td>
+  <td class='ext'>Y</td>
+  <td class='ext'>Z</td>
+  <td class='torque'>A</td>
+  <td class='torque'>B</td>
+  <td class='torque'>C</td>
+</tr></thead>
+<tbody><tr>
+    <td class='ext'><span class='value' id='ext-x-val'>-000.000</span></td>
+    <td class='ext'><span class='value' id='ext-y-val'>-000.000</span></td>
+    <td class='ext'><span class='value' id='ext-z-val'>-000.000</span></td>
+    <td class='torque'><span class='value' id='torque-x-val'>-000.000</span></td>
+    <td class='torque'><span class='value' id='torque-y-val'>-000.000</span></td>
+    <td class='torque'><span class='value' id='torque-z-val'>-000.000</span></td>
+</tr></tbody>
+</table>
+</div><!-- end of region-monitor -->
+
+<div id='region-command'>
+<ul id='region-command-tab'>
+<li id='region-command-tab-joint' tabindex='0' class='enable'>Joint</li>
+<li id='region-command-tab-world' tabindex='0'>World</li>
+<li id='region-command-tab-tool' tabindex='0'>Tool</li>
+<li id='region-command-tab-misc' tabindex='0'>Command</li>
+</ul>
+
+<div id='region-command-body'>
+
+<div class='region-command-body-item enable' id='region-command-body-joint'>
+<table>
+<thead><tr>
+    <td>A1</td>
+    <td>A2</td>
+    <td>A3</td>
+    <td>A4</td>
+    <td>A5</td>
+    <td>A6</td>
+    <td>A7</td>
+</tr></thead>
+<tbody><tr>
+    <td><span class='value' id='joint-a1-cmd' contenteditable='true'>-</span></td>
+    <td><span class='value' id='joint-a2-cmd' contenteditable='true'>-</span></td>
+    <td><span class='value' id='joint-a3-cmd' contenteditable='true'>-</span></td>
+    <td><span class='value' id='joint-a4-cmd' contenteditable='true'>-</span></td>
+    <td><span class='value' id='joint-a5-cmd' contenteditable='true'>-</span></td>
+    <td><span class='value' id='joint-a6-cmd' contenteditable='true'>-</span></td>
+    <td><span class='value' id='joint-a7-cmd' contenteditable='true'>-</span></td>
+</tr></tbody>
+</table>
+</div><!-- end of region-command-body-joint -->
+
+<div class='region-command-body-item' id='region-command-body-world'>
+<table>
+<thead><tr>
+    <td>X</td>
+    <td>Y</td>
+    <td>Z</td>
+    <td>A</td>
+    <td>B</td>
+    <td>C</td>
+    <td>Motion</td>
+</tr></thead>
+<tbody><tr>
+    <td><span class='value' id='world-x-cmd' contenteditable='true'>-</span></td>
+    <td><span class='value' id='world-y-cmd' contenteditable='true'>-</span></td>
+    <td><span class='value' id='world-z-cmd' contenteditable='true'>-</span></td>
+    <td><span class='value' id='world-a-cmd' contenteditable='true'>-</span></td>
+    <td><span class='value' id='world-b-cmd' contenteditable='true'>-</span></td>
+    <td><span class='value' id='world-c-cmd' contenteditable='true'>-</span></td>
+    <td><label><input type='radio' name='world-m-cmd' value='ptp'
+		      checked='checked'/>ptp</label>
+        <label><input type='radio' name='world-m-cmd' value='lin'
+		      />lin</label></td>
+</tr></tbody>
+</table>
+</div><!-- end of region-command-body-world -->
+
+<div class='region-command-body-item' id='region-command-body-tool'>
+<table>
+<thead><tr>
+    <td>X</td>
+    <td>Y</td>
+    <td>Z</td>
+    <td>A</td>
+    <td>B</td>
+    <td>C</td>
+</tr></thead>
+<tbody><tr>
+    <td><span class='value' id='tool-x-cmd' contenteditable='true'>0.0</span></td>
+    <td><span class='value' id='tool-y-cmd' contenteditable='true'>0.0</span></td>
+    <td><span class='value' id='tool-z-cmd' contenteditable='true'>0.0</span></td>
+    <td><span class='value' id='tool-a-cmd' contenteditable='true'>0.0</span></td>
+    <td><span class='value' id='tool-b-cmd' contenteditable='true'>0.0</span></td>
+    <td><span class='value' id='tool-c-cmd' contenteditable='true'>0.0</span></td>
+</tr></tbody>
+</table>
+</div><!-- end of region-command-body-tool -->
+
+<div class='region-command-body-item' id='region-command-body-misc'>
+<input id='direct-cmd-text' name='direct-cmd-text' type='text'
+       autocomplete='on' list='cmd-complete-list' />
+<datalist id='cmd-complete-list'>
+</datalist>
+</div><!-- end of region-command-body-misc -->
+
+<div id='region-command-button'>
+<p id='region-command-button-setzero' title='Clear'
+   tabindex='0'><span class='fa'>&#xf12d;</span></p>
+<p id='region-command-button-cval' title='Clone current value'
+   tabindex='0'><span class='fa'>&#xf101;</span></p>
+<p id='region-command-button-hist-older' title='Step back histroty'
+   tabindex='0'><span class='fa'>&#xf102;</span></p>
+<p id='region-command-button-hist-newer' title='Step forward histroty'
+   tabindex='0'><span class='fa'>&#xf103;</span></p>
+<p id='region-command-button-exec'
+   tabindex='0'><span class='fa'>&#xf0e7;</span> Exec</p>
+<hr id='region-command-button-clear' />
+</div><!-- end of region-command-button -->
+
+</div><!-- end of region-command-body -->
+</div><!-- end of region-command -->
+
+<p id='do-not-panic' tabindex='0'>
+DON&apos;T
+<span class='fa'>&#xf056;</span>
+PANIC</p>
+<p id='motion-error'>
+<span class='fa message'>&#xf071;</span>
+<span class='message'>Motion Error</span>
+<span id='motion-error-recover' class='fa' tabindex='-1' title='Try recover'>&#xf00c;</span>
+</p>
+</body>
+</html>
