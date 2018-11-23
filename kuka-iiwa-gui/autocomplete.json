@@ -1,0 +1,23 @@
+[
+    "setTool ToolName",
+    "setCartImpCtrl X Y Z A B C Damping",
+    "setCartVelocity F",
+    "setCompliance X Y Z A B C",
+    "setJointAcceleration F",
+    "setJointJerk F",
+    "setJointVelocity F",
+    "setPosition A1 A2 A3 A4 A5 A6 A7",
+    "setPositionXYZABC X Y Z A B C ptp/lin",
+    "setWorkspace xmin ymin zmin xmax ymax zmax",
+    "MoveCirc X1 Y1 Z1 A1 B1 C1 X2 Y2 Z2 A2 B2 C2 BlendingOri",
+    "MoveXYZABC X Y Z A B C",
+    "resetCartImpCtrl",
+    "resetCompliance",
+    "resetCollision",
+    "sleep Sec",
+    "forceStop",
+    "guiSetTicksMm fine normal rough",
+    "guiSetTicksDeg fine normal rough",
+    "guiMonitorToolForce on/off",
+    "guiMonitorToolTorque on/off"
+]
